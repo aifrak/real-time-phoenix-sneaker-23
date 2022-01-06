@@ -6,4 +6,27 @@
  * We make no guarantees that this code is fit for any purpose.
  * Visit http://www.pragmaticprogrammer.com/titles/sbsockets for more book information.
 ***/
-import css from "../css/app.css"
+import "../css/app.css"
+import dom from './dom'
+import { productSocket } from "./socket"
+
+const productIds = dom.getProductIds()
+
+if (productIds.length > 0) {
+  productSocket.connect()
+  productIds.forEach((id) => setupProductChannel(productSocket, id))
+}
+
+function setupProductChannel(socket, productId) {
+  const productChannel = socket.channel(`product:${productId}`)
+  productChannel.join()
+    .receive("error", () => {
+      console.error("Channel join failed")
+    })
+
+  productChannel.on('released', ({ size_html }) => {
+    dom.replaceProductComingSoon(productId, size_html)
+  })
+}
+
+
