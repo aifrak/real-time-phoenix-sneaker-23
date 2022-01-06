@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  app:
+    image: aifrak/real-time-phoenix-sneaker-23:latest
+    build:
+      context: .
+      target: base
+      args:
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    user: ${USER_UID:-1000}:${USER_GID:-1000}
+    command: sleep infinity
+    ports:
+      - 4000:4000
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres:13.3
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
+      - POSTGRES_DB=${DB_NAME:-live_view_studio_dev}
+    ports:
+      - ${DB_PORT:-5432}:5432
+    expose:
+      - ${DB_PORT:-5432}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
