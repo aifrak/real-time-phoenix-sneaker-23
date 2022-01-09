@@ -1,8 +1,12 @@
 version: "3.9"
 
 services:
-  app:
+  frontend:
     image: aifrak/real-time-phoenix-sneaker-23:latest
+    depends_on:
+      - chrome
+      # - seleniumhub
+      - db
     build:
       context: .
       target: base
@@ -15,6 +19,9 @@ services:
       - 4000:4000
     volumes:
       - .:/app
+    networks:
+      - default
+      - grid
 
   db:
     image: postgres:13.3
@@ -29,6 +36,124 @@ services:
       - ${DB_PORT:-5432}
     volumes:
       - db-data:/var/lib/postgresql/data
+    networks:
+      - default
+
+  ################################################################
+  # Standalone example
+  ################################################################
+
+  # If only chrome is needed, add this in test.exs and uncomment chrome:
+  # config :hound,
+  # driver: "chrome_driver",
+  # host: "http://chrome",
+  # port: 4444
+  # Avoid timeout while creating a session
+  # http: [timeout: 60_000, recv_timeout: 60_000, connect_timeout: 60_000]
+
+  chrome:
+    image: selenium/standalone-chrome:4.1.1-20211217
+    shm_size: 2gb
+    environment:
+      # - START_XVFB=false
+      - VNC_NO_PASSWORD=1
+    ports:
+      - 4444:4444 # WebDriver
+      - 7900:7900 # VNC
+    networks:
+      - grid
+
+  ################################################################
+  # Headless browser example
+  ################################################################
+
+  # START_XVFB=false is to run tests in headless browser.
+  # Add the code below in the tests to make it work:
+  # hound_session(additional_capabilities: %{
+  #     "chromeOptions": %{"args" => [
+  #       "--user-agent=#{Hound.Browser.user_agent(:chrome)}",
+  #       "--headless",
+  #       "--disable-gpu"
+  #     ]},
+  #     "firefoxOptions": %{"args" => [
+  #       "--user-agent=#{Hound.Browser.user_agent(:firefox)}",
+  #       "--headless",
+  #       "--disable-gpu"
+  #     ]},
+  #     microsoftEdgeOptions: %{"args" => [
+  #       "--user-agent=#{Hound.Browser.user_agent(:default)}",
+  #       "--headless",
+  #       "--disable-gpu"
+  #     ]}
+  # })
+
+  ################################################################
+  # Selenium hub example
+  ################################################################
+
+  # Add this code in test.exs for selenium hub:
+  # config :hound,
+  #   driver: "selenium",
+  #   host: "http://seleniumhub",
+  #   port: 4444
+  # http: [connect_timeout: 60_000] # Avoid timeout while creating a session
+
+  # chrome:
+  #   image: selenium/node-chrome:4.1.1-20211217
+  #   shm_size: 2gb
+  #   depends_on:
+  #     - seleniumhub
+  #   environment:
+  #     - SE_EVENT_BUS_HOST=seleniumhub
+  #     - SE_EVENT_BUS_PUBLISH_PORT=4442
+  #     - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  #     # - START_XVFB=false
+  #     - VNC_NO_PASSWORD=1
+  #   networks:
+  #     - grid
+
+  # edge:
+  #   image: selenium/node-edge:4.1.1-20211217
+  #   shm_size: 2gb
+  #   depends_on:
+  #     - seleniumhub
+  #   environment:
+  #     - SE_EVENT_BUS_HOST=seleniumhub
+  #     - SE_EVENT_BUS_PUBLISH_PORT=4442
+  #     - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  #     # - START_XVFB=false
+  #     - VNC_NO_PASSWORD=1
+  #   networks:
+  #     - grid
+
+  # firefox:
+  #   image: selenium/node-firefox:4.1.1-20211217
+  #   shm_size: 2gb
+  #   depends_on:
+  #     - seleniumhub
+  #   environment:
+  #     - SE_EVENT_BUS_HOST=seleniumhub
+  #     - SE_EVENT_BUS_PUBLISH_PORT=4442
+  #     - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  #     # - START_XVFB=false
+  #     - VNC_NO_PASSWORD=1
+  #   networks:
+  #     - grid
+
+  # seleniumhub:
+  #   image: selenium/hub:4.1.1-20211217
+  #   container_name: seleniumhub
+  #   ports:
+  #     - 4442:4442
+  #     - 4443:4443
+  #     - 4444:4444 # WebDriver
+  #     - 7900:7900 # VNC
+  #   networks:
+  #     - grid
 
 volumes:
-  db-data:
+  db-data: null
+
+networks:
+  default:
+  grid:

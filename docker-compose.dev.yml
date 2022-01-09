@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  app:
+  frontend:
     image: aifrak/real-time-phoenix-sneaker-23:dev
     build:
       target: dev

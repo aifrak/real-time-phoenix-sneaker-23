@@ -21,7 +21,7 @@ config :sneakers_23,
 
 # Configures the endpoint
 config :sneakers_23, Sneakers23Web.Endpoint,
-  url: [host: "0.0.0.0"],
+  url: [host: "frontend"],
   secret_key_base: "/pQ3LrKcYNFtUJQ5XQBobICQGWUFohT3O6yuz+76ZuzA2khRwvIBpFJx6BTeFTZ/",
   render_errors: [view: Sneakers23Web.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Sneakers23.PubSub, adapter: Phoenix.PubSub.PG2]

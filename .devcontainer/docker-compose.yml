@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  app:
+  frontend:
     build:
       target: vscode
     volumes:
@@ -9,5 +9,5 @@ services:
       - vscode-insiders:/home/app-user/.vscode-server-insiders/extensions
 
 volumes:
-  vscode:
-  vscode-insiders:
+  vscode: null
+  vscode-insiders: null

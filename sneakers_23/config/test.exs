@@ -20,7 +20,23 @@ config :sneakers_23, Sneakers23.Repo,
 # you can enable the server option below.
 config :sneakers_23, Sneakers23Web.Endpoint,
   http: [port: 4002],
-  server: false
+  server: true
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Config for selenium hub, remove default browser to test on Chrome, Firefox and Edge randomly.
+# config :hound,
+#   driver: "selenium",
+#   browser: "chrome",
+#   host: "http://seleniumhub",
+#   port: 4444
+
+config :hound,
+  driver: "chrome_driver",
+  host: "http://chrome",
+  port: 4444,
+  # Avoid timeout while creating a session
+  http: [timeout: 60_000, recv_timeout: 60_000, connect_timeout: 60_000]
+
+config :sneakers_23, sql_sandbox: true
