@@ -7,15 +7,21 @@
  * Visit http://www.pragmaticprogrammer.com/titles/sbsockets for more book information.
 ***/
 import "../css/app.css"
+import Cart from './cart'
 import dom from './dom'
 import { productSocket } from "./socket"
 
+productSocket.connect()
+
 const productIds = dom.getProductIds()
 
-if (productIds.length > 0) {
-  productSocket.connect()
-  productIds.forEach((id) => setupProductChannel(productSocket, id))
-}
+productIds.forEach((id) => setupProductChannel(productSocket, id))
+
+const cartChannel = Cart.setupCartChannel(productSocket, window.cartId, {
+  onCartChange: (newCart) => {
+    dom.renderCartHtml(newCart)
+  }
+})
 
 function setupProductChannel(socket, productId) {
   const productChannel = socket.channel(`product:${productId}`)
