@@ -68,6 +68,18 @@ defmodule Sneakers23Web do
     end
   end
 
+  def notify_local_item_stock_change(%{available_count: 0, id: id}) do
+    Sneakers23.PubSub
+    |> Phoenix.PubSub.node_name()
+    |> Phoenix.PubSub.direct_broadcast(
+      Sneakers23.PubSub,
+      "item_out:#{id}",
+      {:item_out, id}
+    )
+  end
+
+  def notify_local_item_stock_change(_), do: false
+
   @doc """
   When used, dispatch to the appropriate controller/view/etc.
   """
