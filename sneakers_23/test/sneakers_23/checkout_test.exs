@@ -1,11 +1,11 @@
-#---
+# ---
 # Excerpted from "Real-Time Phoenix",
 # published by The Pragmatic Bookshelf.
 # Copyrights apply to this code. It may not be used to create training material,
 # courses, books, articles, and the like. Contact us if you are in doubt.
 # We make no guarantees that this code is fit for any purpose.
 # Visit http://www.pragmaticprogrammer.com/titles/sbsockets for more book information.
-#---
+# ---
 defmodule Sneakers23.CheckoutTest do
   use Sneakers23.DataCase, async: true
 
@@ -67,7 +67,8 @@ defmodule Sneakers23.CheckoutTest do
       assert {:ok, cart} = Checkout.add_item_to_cart(cart, 1)
 
       assert Checkout.purchase_cart(cart) == {:error, :purchase_failed}
-      Process.sleep(50) # purge async
+      # purge async
+      Process.sleep(5)
     end
 
     test "no availability returns an error" do
@@ -77,7 +78,8 @@ defmodule Sneakers23.CheckoutTest do
       assert {:ok, cart} = Checkout.add_item_to_cart(cart, i1.id)
 
       assert Checkout.purchase_cart(cart) == {:error, :purchase_failed}
-      Process.sleep(50) # purge async
+      # purge async
+      Process.sleep(5)
     end
 
     test "a valid item can be purchased" do
@@ -86,7 +88,8 @@ defmodule Sneakers23.CheckoutTest do
       assert {:ok, cart} = Checkout.add_item_to_cart(cart, i1.id)
 
       assert Checkout.purchase_cart(cart, skip_replication: true) == {:ok, :purchase_complete}
-      Process.sleep(50) # purge async
+      # purge async
+      Process.sleep(5)
     end
 
     test "multiple items can be purchased" do
@@ -96,7 +99,8 @@ defmodule Sneakers23.CheckoutTest do
       assert {:ok, cart} = Checkout.add_item_to_cart(cart, i2.id)
 
       assert Checkout.purchase_cart(cart, skip_replication: true) == {:ok, :purchase_complete}
-      Process.sleep(50) # purge async
+      # purge async
+      Process.sleep(5)
     end
   end
 end
