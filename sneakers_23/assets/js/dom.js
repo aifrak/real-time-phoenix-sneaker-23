@@ -1,3 +1,11 @@
+/***
+ * Excerpted from "Real-Time Phoenix",
+ * published by The Pragmatic Bookshelf.
+ * Copyrights apply to this code. It may not be used to create training material,
+ * courses, books, articles, and the like. Contact us if you are in doubt.
+ * We make no guarantees that this code is fit for any purpose.
+ * Visit http://www.pragmaticprogrammer.com/titles/sbsockets for more book information.
+***/
 import { getCartHtml } from './cartRenderer'
 
 const dom = {}
@@ -7,20 +15,21 @@ function getProductIds() {
   return Array.from(products).map((el) => el.dataset.productId)
 }
 
-// This function lets the DOM turn HTML into the appropriate node types,
-// and then swaps out the original element for the new node.
+dom.getProductIds = getProductIds
+
+export default dom
+
 function replaceProductComingSoon(productId, sizeHtml) {
   const name = `.product-soon-${productId}`
   const productSoonEls = document.querySelectorAll(name)
 
   productSoonEls.forEach((el) => {
-    // It seems it is also to support IE and Safari and is shorter to write:
-    // https://stackoverflow.com/questions/9284117/inserting-arbitrary-html-into-a-documentfragment/25214113
-    const fragment = document.createRange()
-      .createContextualFragment(sizeHtml)
+    const fragment = document.createRange().createContextualFragment(sizeHtml)
     el.replaceWith(fragment)
   })
 }
+
+dom.replaceProductComingSoon = replaceProductComingSoon
 
 function updateItemLevel(itemId, level) {
   Array.from(document.querySelectorAll('.size-container__entry')).
@@ -32,19 +41,19 @@ function updateItemLevel(itemId, level) {
     })
 }
 
+dom.updateItemLevel = updateItemLevel
+
 function removeStockLevelClasses(el) {
   Array.from(el.classList).
     filter((s) => s.startsWith("size-container__entry--level-")).
     forEach((name) => el.classList.remove(name))
 }
 
-dom.getProductIds = getProductIds
-dom.replaceProductComingSoon = replaceProductComingSoon
-dom.updateItemLevel = updateItemLevel
 dom.renderCartHtml = (cart) => {
   const cartContainer = document.getElementById("cart-container")
   cartContainer.innerHTML = getCartHtml(cart)
 }
+
 dom.onItemClick = (fn) => {
   document.addEventListener('click', (event) => {
     if (!event.target.matches('.size-container__entry')) { return }
@@ -61,5 +70,3 @@ dom.onItemRemoveClick = (fn) => {
     fn(event.target.dataset.itemId)
   })
 }
-
-export default dom
