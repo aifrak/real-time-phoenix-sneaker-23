@@ -22,6 +22,14 @@ config :sneakers_23, Sneakers23Web.Endpoint,
   http: [port: 4002],
   server: true
 
+# Configure our local login to be admin/password.
+# Enter these credentials when the HTTP Basic Auth screen appears.
+config :sneakers_23,
+  admin_auth: [
+    username: "admin",
+    password: "password"
+  ]
+
 # Print only warnings and errors during test
 config :logger, level: :warn
 
