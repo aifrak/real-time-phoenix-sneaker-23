@@ -25,7 +25,8 @@ Cart.setupCartChannel = (socket, cartId, { onCartChange }) => {
 // ourselves in a situation where a cart resets each time the Channel reconnects.
 function channelParams() {
   return {
-    serialized: localStorage.storedCart
+    serialized: localStorage.storedCart,
+    page: window.location.pathname
   }
 }
 
