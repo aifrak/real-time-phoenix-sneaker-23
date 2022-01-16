@@ -9,6 +9,8 @@
 defmodule Sneakers23Web.Router do
   use Sneakers23Web, :router
 
+  import Phoenix.LiveView.Router
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -29,6 +31,8 @@ defmodule Sneakers23Web.Router do
     get "/checkout", CheckoutController, :show
     post "/checkout", CheckoutController, :purchase
     get "/checkout/complete", CheckoutController, :success
+
+    live "/drops", ProductPageLive
   end
 
   pipeline :admin do

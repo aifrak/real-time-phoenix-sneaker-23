@@ -9,13 +9,17 @@
 import "../css/app.css"
 import Cart from './cart'
 import dom from './dom'
-import { productSocket } from "./socket"
+import { connectToLiveView, productSocket } from "./socket"
 
 productSocket.connect()
 
-const productIds = dom.getProductIds()
+if (document.querySelectorAll("[data-phx-main]").length) {
+  connectToLiveView()
+} else {
+  const productIds = dom.getProductIds()
 
-productIds.forEach((id) => setupProductChannel(productSocket, id))
+  productIds.forEach((id) => setupProductChannel(productSocket, id))
+}
 
 const cartChannel = Cart.setupCartChannel(productSocket, window.cartId, {
   onCartChange: (newCart) => {
@@ -30,6 +34,7 @@ dom.onItemClick((itemId) => {
 dom.onItemRemoveClick((itemId) => {
   Cart.removeCartItem(cartChannel, itemId)
 })
+
 
 function setupProductChannel(socket, productId) {
   const productChannel = socket.channel(`product:${productId}`)
