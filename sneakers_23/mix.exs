@@ -53,6 +53,7 @@ defmodule Sneakers23.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:hound, "~> 1.0"},
+      {:floki, ">= 0.0.0", only: :test},
       {:basic_auth, "~> 2.2.2"}
     ]
   end
